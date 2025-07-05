@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Music Player</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background-color: #1db954;
+      color: white;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    iframe {
+      width: 90%;
+      max-width: 600px;
+      height: 340px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 YouTube Music Player 🎵</h1>
+  <input type="text" id="youtubeLink" placeholder="Paste YouTube Link Here">
+  <button onclick="addSong()">Add Song</button>  <h2>Playlist:</h2>
+  <ul id="playlist"></ul>  <iframe id="player" src="" allowfullscreen></iframe>  <script>
+    const playlist = [];
+
+    function extractVideoID(url) {
+      const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[1].length == 11) ? match[1] : null;
+    }
+
+    function addSong() {
+      const link = document.getElementById("youtubeLink").value;
+      const videoId = extractVideoID(link);
+      if (!videoId) {
+        alert("Invalid YouTube link!");
+        return;
+      }
+      playlist.push(videoId);
+      updatePlaylist();
+      document.getElementById("youtubeLink").value = "";
+    }
+
+    function updatePlaylist() {
+      const list = document.getElementById("playlist");
+      list.innerHTML = "";
+      playlist.forEach((id, index) => {
+        const li = document.createElement("li");
+        li.textContent = `Song ${index + 1}`;
+        li.onclick = () => {
+          document.getElementById("player").src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+        };
+        list.appendChild(li);
+      });
+    }
+  </script></body>
+</html>
